@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cinépolis - Cartelera Oficial y Club Cinépolis</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* VARIABLES & RESET */
+    :root {
+      --primary: #0a1128;
+      --secondary: #002f6c;
+      --accent: #ffcc00;
+      --text: #ffffff;
+      --text-muted: #a0aec0;
+      --card-bg: #121d3b;
+      --card-border: #1c2d58;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--primary);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    /* BARRA DE NAVEGACIÓN & HEADER */
+    header {
+      background-color: #050b1a;
+      border-bottom: 2px solid var(--accent);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .top-bar {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #fff;
+    }
+
+    .logo i {
+      color: var(--accent);
+      font-size: 2rem;
+    }
+
+    .logo-text {
+      font-size: 1.8rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+
+    .logo-text span {
+      color: var(--accent);
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 20px;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 8px 12px;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+
+    nav a:hover, nav a.active {
+      background-color: var(--secondary);
+      color: var(--accent);
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      background: #101c38;
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 6px 15px;
+    }
+
+    .search-box input {
+      background: transparent;
+      border: none;
+      color: #fff;
+      outline: none;
+      padding: 4px 8px;
+      width: 180px;
+    }
+
+    .search-box i {
+      color: var(--text-muted);
+    }
+
+    /* HERO BANNER */
+    .hero-banner {
+      background: linear-gradient(rgba(10, 17, 40, 0.4), var(--primary)), 
+                  url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1600&q=80') center/cover;
+      height: 380px;
+      display: flex;
+      align-items: flex-end;
+      padding: 40px;
+    }
+
+    .hero-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .hero-tag {
+      background: var(--accent);
+      color: #000;
+      padding: 4px 10px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      border-radius: 3px;
+      text-transform: uppercase;
+    }
+
+    .hero-title {
+      font-size: 2.5rem;
+      margin: 10px 0;
+      font-weight: 800;
+    }
+
+    /* CONTENEDOR PRINCIPAL */
+    .container {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    .section-title {
+      font-size: 1.6rem;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-left: 4px solid var(--accent);
+      padding-left: 12px;
+    }
+
+    /* TARJETAS DE PELÍCULAS (ESTÁTICAS - SIN ANIMACIÓN EN HOVER) */
+    .movies-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 25px;
+      margin-bottom: 50px;
+    }
+
+    .movie-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      overflow: hidden;
+      /* Mantiene la tarjeta fija sin transiciones de movimiento */
+    }
+
+    .poster-wrapper {
+      position: relative;
+      height: 320px;
+      overflow: hidden;
+    }
+
+    .poster-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .rating-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(0, 0, 0, 0.85);
+      color: var(--accent);
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      border: 1px solid var(--accent);
+    }
+
+    .movie-info {
+      padding: 15px;
+    }
+
+    .movie-title {
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin-bottom: 5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .movie-meta {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .btn-buy {
+      display: block;
+      width: 100%;
+      background-color: var(--secondary);
+      color: #fff;
+      text-align: center;
+      padding: 10px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+      border: 1px solid #1c4b82;
+    }
+
+    .btn-buy:hover {
+      background-color: #00408d;
+    }
+
+    /* SECCIÓN CLUB CINÉPOLIS (TABS EN CSS PURO) */
+    .club-section {
+      background: linear-gradient(135deg, #0d1a3a 0%, #050b1a 100%);
+      border: 1px solid var(--accent);
+      border-radius: 12px;
+      padding: 30px;
+      margin: 40px 0;
+    }
+
+    .club-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .club-header h2 {
+      color: var(--accent);
+      font-size: 2rem;
+      margin-bottom: 5px;
+    }
+
+    .tab-system {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    /* Ocultar los inputs de radio */
+    .tab-system input[type="radio"] {
+      display: none;
+    }
+
+    .tab-labels {
+      display: flex;
+      border-bottom: 2px solid var(--card-border);
+      margin-bottom: 25px;
+    }
+
+    .tab-labels label {
+      flex: 1;
+      text-align: center;
+      padding: 12px;
+      cursor: pointer;
+      font-weight: bold;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    /* Cambios visuales con selecciones CSS */
+    #tab-login:checked ~ .tab-labels label[for="tab-login"],
+    #tab-register:checked ~ .tab-labels label[for="tab-register"] {
+      color: var(--accent);
+      border-bottom: 3px solid var(--accent);
+      background: rgba(255, 204, 0, 0.05);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    #tab-login:checked ~ .content-login,
+    #tab-register:checked ~ .content-register {
+      display: block;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid var(--card-border);
+      background: #081024;
+      color: #fff;
+      font-size: 0.95rem;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 12px;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .btn-submit:hover {
+      background: #e6b800;
+    }
+
+    /* FOOTER */
+    footer {
+      background-color: #040814;
+      border-top: 1px solid var(--card-border);
+      padding: 40px 0 20px 0;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .footer-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+
+    .footer-col h4 {
+      color: #fff;
+      margin-bottom: 15px;
+      font-size: 1rem;
+    }
+
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col li {
+      margin-bottom: 8px;
+    }
+
+    .footer-col a {
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+
+    .footer-col a:hover {
+      color: var(--accent);
+    }
+
+    .copyright {
+      text-align: center;
+      padding-top: 20px;
+      border-top: 1px solid #0a1428;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BARRA DE NAVEGACIÓN -->
+  <header>
+    <div class="top-bar">
+      <a href="#" class="logo">
+        <i class="fa-solid fa-film"></i>
+        <div class="logo-text">Cinépolis<span>.</span></div>
+      </a>
+      <nav>
+        <ul>
+          <li><a href="#cartelera" class="active">Cartelera</a></li>
+          <li><a href="#proximamente">Próximos Estrenos</a></li>
+          <li><a href="#club">Club Cinépolis</a></li>
+        </ul>
+      </nav>
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Buscar película...">
+      </div>
+    </div>
+  </header>
+
+  <!-- BANNER PRINCIPAL -->
+  <div class="hero-banner">
+    <div class="hero-content">
+      <span class="hero-tag">Estreno Exclusivo</span>
+      <h1 class="hero-title">Avengers: Doomsday</h1>
+      <p style="margin-bottom: 15px; color: #ddd;">Vive la experiencia cinemática en la pantalla más grande.</p>
+      <a href="#cartelera" class="btn-buy" style="display: inline-block; width: auto; padding: 10px 25px;">Ver Horarios</a>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- EN CARTELERA -->
+    <h2 class="section-title" id="cartelera"><i class="fa-solid fa-ticket" style="color: var(--accent);"></i> Películas en Cartelera</h2>
+    <div class="movies-grid">
+      
+      <div class="movie-card">
+        <div class="poster-wrapper">
+          <span class="rating-badge">B15</span>
+          <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=500&q=80" alt="El Laberinto Del Fauno">
+        </div>
+        <div class="movie-info">
+          <div class="movie-title">El Laberinto Del Fauno</div>
+          <div class="movie-meta">Fantasía / Drama • 118 min</div>
+          <a href="#club" class="btn-buy">Comprar Boletos</a>
+        </div>
+      </div>
+
+      <div class="movie-card">
+        <div class="poster-wrapper">
+          <span class="rating-badge">B</span>
+          <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=500&q=80" alt="Madre Siniestra">
+        </div>
+        <div class="movie-info">
+          <div class="movie-title">Madre Siniestra</div>
+          <div class="movie-meta">Terror / Suspenso • 95 min</div>
+          <a href="#club" class="btn-buy">Comprar Boletos</a>
+        </div>
+      </div>
+
+      <div class="movie-card">
+        <div class="poster-wrapper">
+          <span class="rating-badge">A</span>
+          <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=500&q=80" alt="Tu Nombre">
+        </div>
+        <div class="movie-info">
+          <div class="movie-title">Tu Nombre (Your Name)</div>
+          <div class="movie-meta">Anime / Romance • 107 min</div>
+          <a href="#club" class="btn-buy">Comprar Boletos</a>
+        </div>
+      </div>
+
+      <div class="movie-card">
+        <div class="poster-wrapper">
+          <span class="rating-badge">B15</span>
+          <img src="https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=500&q=80" alt="Verity">
+        </div>
+        <div class="movie-info">
+          <div class="movie-title">Verity: Sombra de Engaño</div>
+          <div class="movie-meta">Thriller / Drama • 110 min</div>
+          <a href="#club" class="btn-buy">Comprar Boletos</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- PRÓXIMOS ESTRENOS -->
+    <h2 class="section-title" id="proximamente"><i class="fa-solid fa-calendar-days" style="color: var(--accent);"></i> Próximos Estrenos</h2>
+    <div class="movies-grid">
+
+      <div class="movie-card">
+        <div class="poster-wrapper">
+          <span class="rating-badge">TBC</span>
+          <img src="https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=500&q=80" alt="Street Fighter">
+        </div>
+        <div class="movie-info">
+          <div class="movie-title">Street Fighter</div>
+          <div class="movie-meta">Acción / Videojuego</div>
+          <a href="#" class="btn-buy" style="background:#223355;">Próximamente</a>
+        </div>
+      </div>
+
+      <div class="movie-card">
+        <div class="poster-wrapper">
+          <span class="rating-badge">TBC</span>
+          <img src="https://images.unsplash.com/photo-1568876694728-451bbf694b83?auto=format&fit=crop&w=500&q=80" alt="Clayface">
+        </div>
+        <div class="movie-info">
+          <div class="movie-title">Clayface</div>
+          <div class="movie-meta">DC / Acción</div>
+          <a href="#" class="btn-buy" style="background:#223355;">Próximamente</a>
+        </div>
+      </div>
+
+      <div class="movie-card">
+        <div class="poster-wrapper">
+          <span class="rating-badge">TBC</span>
+          <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=500&q=80" alt="Duna Parte Tres">
+        </div>
+        <div class="movie-info">
+          <div class="movie-title">Duna: Parte Tres</div>
+          <div class="movie-meta">Ciencia Ficción</div>
+          <a href="#" class="btn-buy" style="background:#223355;">Próximamente</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SECCIÓN CLUB CINÉPOLIS (LOGIN / REGISTRO) -->
+    <div class="club-section" id="club">
+      <div class="club-header">
+        <h2><i class="fa-solid fa-id-card"></i> Club Cinépolis</h2>
+        <p>Accede a promociones exclusivas, acumula puntos y obtén boletos 2x1 los martes.</p>
+      </div>
+
+      <div class="tab-system">
+        <input type="radio" id="tab-login" name="club-tabs" checked>
+        <input type="radio" id="tab-register" name="club-tabs">
+
+        <div class="tab-labels">
+          <label for="tab-login">Ingresar con Tarjeta</label>
+          <label for="tab-register">Registrarse al Club</label>
+        </div>
+
+        <!-- FORMULARIO DE INGRESO -->
+        <div class="tab-content content-login">
+          <form onsubmit="return false;">
+            <div class="form-group">
+              <label>Número de Tarjeta Club Cinépolis (16 dígitos)</label>
+              <input type="text" placeholder="1234 5678 9012 3456" maxlength="16" required>
+            </div>
+            <div class="form-group">
+              <label>Contraseña</label>
+              <input type="password" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="btn-submit">Ingresar a mi Cuenta</button>
+          </form>
+        </div>
+
+        <!-- FORMULARIO DE REGISTRO -->
+        <div class="tab-content content-register">
+          <form onsubmit="return false;">
+            <div class="form-group">
+              <label>Nombre Completo</label>
+              <input type="text" placeholder="Tu nombre" required>
+            </div>
+            <div class="form-group">
+              <label>Correo Electrónico</label>
+              <input type="email" placeholder="correo@ejemplo.com" required>
+            </div>
+            <div class="form-group">
+              <label>Teléfono Celular</label>
+              <input type="tel" placeholder="10 dígitos" required>
+            </div>
+            <div class="form-group">
+              <label>Crea una Contraseña</label>
+              <input type="password" placeholder="Mínimo 8 caracteres" required>
+            </div>
+            <button type="submit" class="btn-submit">Crear Cuenta Club Cinépolis</button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>Programas</h4>
+        <ul>
+          <li><a href="#club">Club Cinépolis</a></li>
+          <li><a href="#">Garantía Cinépolis</a></li>
+          <li><a href="#">Ventas Corporativas</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>¿Quiénes Somos?</h4>
+        <ul>
+          <li><a href="#">Únete al Equipo</a></li>
+          <li><a href="#">Próximas Aperturas</a></li>
+          <li><a href="#">Fundación Cinépolis</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legales</h4>
+        <ul>
+          <li><a href="#">Términos y Condiciones</a></li>
+          <li><a href="#">Aviso de Privacidad</a></li>
+          <li><a href="#">Términos Club Cinépolis</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contacto</h4>
+        <ul>
+          <li><a href="#">Atención a Clientes</a></li>
+          <li><a href="#">Facturación Electrónica</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="copyright">
+      <p>&copy; 2026 Cinépolis de México, S.A. de C.V. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
